@@ -32,8 +32,8 @@ def main():
 
     store = ModbusSlaveContext(di=None,
                                co=None,
-                               hr=create_spotlight_holding_register_block,
-                               ir=create_spotlight_input_register_block)
+                               hr=create_spotlight_holding_register_block(),
+                               ir=create_spotlight_input_register_block())
     context = ModbusServerContext(slaves={CONFIG_SLAVE_ID: store}, single=False)
 
     print(f"Starting Modbus RTU Slave on {port} at {CONFIG_BAUDRATE} baud...")
