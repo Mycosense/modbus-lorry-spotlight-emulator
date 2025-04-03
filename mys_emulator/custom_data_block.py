@@ -77,7 +77,7 @@ class SpotlightHoldingRegisterDataBlock(ModbusSparseDataBlock):
 
 
 def create_spotlight_input_register_block() -> SpotlightInputRegistersDataBlock:
-    return SpotlightHoldingRegisterDataBlock({
+    return SpotlightInputRegistersDataBlock({
         REG_30001_ADDR: REG_30001_VAL,
         REG_30002_ADDR: REG_30002_VAL
     })
