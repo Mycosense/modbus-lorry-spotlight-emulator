@@ -4,8 +4,8 @@ from mys_emulator.utils import uint16_to_bit_array, bit_array_to_uint16
 
 
 # Input registers
-REG_30001_ADDR = 0x01  # Spotlight control FIXME in datasheet it's 0x00
-REG_30002_ADDR = 0x02  # Spotlight speed FIXME in datasheet it's 0x01
+REG_30001_ADDR = 0x00  # Spotlight control FIXME in datasheet it's 0x00
+REG_30002_ADDR = 0x01  # Spotlight speed FIXME in datasheet it's 0x01
 
 SL_CTL_ENABLE = 1  # b0: Spotlight control enable
 REG_30001_VAL = bit_array_to_uint16([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, SL_CTL_ENABLE])
@@ -39,9 +39,6 @@ class SpotlightInputRegistersDataBlock(ModbusSparseDataBlock):
         """ Hook into reads to modify responses dynamically. """
         values = super().getValues(address, count)
         print(f"Client Read -> Address: {address}, Count: {count}, Values: {values}")
-        # Example: If the client reads register 10, return a dynamic value
-        # if address == 1:
-        #    return [42]  # Always return 42 at address 10
         return values
 
 
@@ -59,8 +56,8 @@ class SpotlightHoldingRegisterDataBlock(ModbusSparseDataBlock):
 
     def decode_registers(self):
         # Decoding value received from the lorry for debug
-        values = super().getValues(REG_40001_VAL, 7)
-        reg_40001 = uint16_to_bit_array(values[0])
+        values = super().getValues(REG_40001_ADDR, 7)
+        reg_40001 = list(reversed(uint16_to_bit_array(values[0])))
         print('Received value from lorry:')
         print(f'- lorry status, error: {reg_40001[0]}')
         print(f'- lorry status, horizontal limit right: {reg_40001[1]}')
@@ -76,7 +73,8 @@ class SpotlightHoldingRegisterDataBlock(ModbusSparseDataBlock):
         print(f'- lorry weight 3: {values[6]}g')
 
 
-def create_spotlight_input_register_block() -> SpotlightInputRegistersDataBlock:
+def create_spotlight_input_register_block(speed: int) -> SpotlightInputRegistersDataBlock:
+    REG_30002_VAL = speed
     return SpotlightInputRegistersDataBlock({
         REG_30001_ADDR: REG_30001_VAL,
         REG_30002_ADDR: REG_30002_VAL

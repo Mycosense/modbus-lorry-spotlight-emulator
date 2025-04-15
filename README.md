@@ -17,7 +17,9 @@ pip install -e .
 If you want to emulate the spotlight as device on the modbus. You can run the following script:
 
 ```bash
-emulate_spotlight
+emulate_spotlight <tty port>
+# For exemple
+emulate_spotlight /dev/tty.usbserial-AU051GIN   
 ```
 
 ## Power ON sequence
